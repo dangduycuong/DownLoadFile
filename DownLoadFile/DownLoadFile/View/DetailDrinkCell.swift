@@ -13,9 +13,10 @@ class DetailDrinkCell: UITableViewCell {
     @IBOutlet weak var strIngredientLabel: UILabel!
     @IBOutlet weak var strDescriptionLabel: UILabel!
     
+    var url: String?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -23,5 +24,8 @@ class DetailDrinkCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
+    
+    func fillData() {
+        detailDrinkImageView.dowloadFromServer(link: url ?? "")
+    }
 }

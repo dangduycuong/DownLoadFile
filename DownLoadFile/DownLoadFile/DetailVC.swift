@@ -10,10 +10,10 @@ import UIKit
 
 class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var strIBALabel: UILabel!
     @IBOutlet weak var strDrinkLabel: UILabel!
+    @IBOutlet weak var anh: UIImageView?
     
     var detailDrink = Drinks()
     var ingredients: [Ingredients]?
@@ -22,13 +22,13 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let url = self.detailDrink.strDrinkThumb
-        
-        if url != nil, let linkImageView = URL(string: url!) {
-            detailDrinkImageView.dowloadFromServer(url: linkImageView)
-        }
         displayData()
         callAPI()
+    }
+    
+    func downloadImage(image: UIImageView?) {
+        image?.dowloadFromServer(link: detailDrink.strDrinkThumb!)
+        tableView.reloadData()
     }
     
     func displayData() {
@@ -63,14 +63,19 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ingredients == nil ? 0 : ingredients!.count
+        return ingredients == nil ? 1 : ingredients!.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DetailDrinkCell", for: indexPath) as! DetailDrinkCell
-        cell.strIngredientLabel.text = ingredients![indexPath.row].strIngredient
-        cell.strDescriptionLabel.text = ingredients![indexPath.row].strDescription
-        cell.detailDrinkImageView.image = detailDrinkImageView.image
+        if ingredients != nil {
+            cell.strIngredientLabel.text = ingredients![indexPath.row].strIngredient ?? ""
+            cell.strDescriptionLabel.text = ingredients![indexPath.row].strDescription ?? ""
+        }
+        
+        cell.url = detailDrink.strDrinkThumb
+        cell.fillData()
+        
         return cell
     }
 }
